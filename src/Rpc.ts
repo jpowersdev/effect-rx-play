@@ -4,9 +4,13 @@ import { Layer } from "effect"
 import { UsersLive } from "./Users/Handler.js"
 import { UserRpcs } from "./Users/Rpc.js"
 
+const RpcsLive = Layer.mergeAll(UsersLive)
+
+const RpcServerLive = RpcsLive.pipe(
+  Layer.provideMerge(RpcSerialization.layerNdjson),
+  Layer.provideMerge(BunHttpServer.layerContext)
+)
+
 export const rpcHandler = RpcServer.toWebHandler(UserRpcs, {
-  layer: UsersLive.pipe(
-    Layer.provideMerge(RpcSerialization.layerNdjson),
-    Layer.provideMerge(BunHttpServer.layerContext)
-  )
+  layer: RpcServerLive
 })

@@ -1,10 +1,12 @@
+import { Rx } from "@effect-rx/rx-react"
 import { FetchHttpClient } from "@effect/platform"
 import { RpcClient as Client, RpcSerialization } from "@effect/rpc"
-import { Config, Effect, Layer } from "effect"
+import { Effect, Layer } from "effect"
+import { UserRpcs } from "../../Users/Rpc.js"
 
 // Choose which protocol to use
 const ProtocolLive = Client.layerProtocolHttp({
-  url: "http://localhost:3000/rpc"
+  url: "/api/rpc"
 }).pipe(
   Layer.provide([
     // use fetch for http requests
@@ -14,12 +16,11 @@ const ProtocolLive = Client.layerProtocolHttp({
   ])
 )
 
+const Rpcs = UserRpcs
+
 export class RpcClient extends Effect.Service<RpcClient>()("RpcClient", {
   dependencies: [ProtocolLive],
-  effect: Effect.gen(function*() {
-    const port = yield* Config.number("PORT")
-    return Client.make({
-      url: `http://localhost:${port}/rpc`
-    })
-  })
+  scoped: Client.make(Rpcs)
 }) {}
+
+export const rpcRuntime = Rx.runtime(RpcClient.Default)
