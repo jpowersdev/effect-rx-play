@@ -1,5 +1,5 @@
 import { FileSystem, Path } from "@effect/platform"
-import { NodeContext } from "@effect/platform-node"
+import { BunContext } from "@effect/platform-bun"
 import { Effect } from "effect"
 
 const program = Effect.gen(function*() {
@@ -27,6 +27,6 @@ const program = Effect.gen(function*() {
   }
   yield* fs.writeFileString(path.join("dist", "package.json"), JSON.stringify(pkg, null, 2))
   yield* Effect.log("[Build] Build completed.")
-}).pipe(Effect.provide(NodeContext.layer))
+}).pipe(Effect.provide(BunContext.layer))
 
 Effect.runPromise(program).catch(console.error)
