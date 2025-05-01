@@ -15,6 +15,12 @@ export class UserRpcs extends RpcGroup.make(
       id: Schema.String
     }
   }),
+  Rpc.make("UserByName", {
+    success: Schema.Array(User),
+    payload: {
+      name: Schema.String
+    }
+  }),
   Rpc.make("UserCreate", {
     success: User,
     payload: {

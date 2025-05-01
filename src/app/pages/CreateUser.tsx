@@ -1,12 +1,12 @@
-import { useRxRefresh, useRxSetPromise } from "@effect-rx/rx-react"
+import { useRxSet, useRxSetPromise } from "@effect-rx/rx-react"
 import { Exit } from "effect"
 import { useNavigate } from "react-router"
-import { createUserRx, usersRx } from "../rx/users.js"
+import { createUserRx, resetRx } from "../rx/users.js"
 
 export const CreateUser = () => {
   const navigate = useNavigate()
   const createUser = useRxSetPromise(createUserRx)
-  const refreshUsers = useRxRefresh(usersRx)
+  const refreshUsers = useRxSet(resetRx)
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
